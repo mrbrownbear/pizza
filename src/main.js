@@ -495,7 +495,8 @@ loadingManager.onProgress=(_url,loaded,total)=>{
 loadingManager.onError=(url)=>{console.warn('Asset load failed',url);};
 const gltfLoader=new GLTFLoader(loadingManager);
 
-gltfLoader.load('/assets/mascot/mascot.gltf',(gltf)=>{
+function loadMascot(url,fallback=true){
+  gltfLoader.load(url,(gltf)=>{
   mascot=gltf.scene;
   mascotWrap.add(mascot);
   const box3=new THREE.Box3().setFromObject(mascot);
@@ -530,11 +531,18 @@ gltfLoader.load('/assets/mascot/mascot.gltf',(gltf)=>{
   headNode=mascot.getObjectByName('head.x_0128') || mascot.getObjectByName('c_head.x_0127');
   loaderEl.classList.add('is-ready');
   setTimeout(()=>loaderEl.classList.add('is-done'),700);
-},undefined,(error)=>{
-  console.error(error);
-  loadCopy.textContent='MASCOT COULD NOT LOAD';
-  setTimeout(()=>loaderEl.classList.add('is-done'),1100);
-});
+  },undefined,(error)=>{
+    console.error(error);
+    if(fallback && url !== '/assets/mascot/mascot.gltf'){
+      loadCopy.textContent='LOADING MASCOT FALLBACK';
+      loadMascot('/assets/mascot/mascot.gltf',false);
+      return;
+    }
+    loadCopy.textContent='MASCOT COULD NOT LOAD';
+    setTimeout(()=>loaderEl.classList.add('is-done'),1100);
+  });
+}
+loadMascot('/assets/mascot/pizza-bros-mascot.glb',true);
 
 const pointer={x:0,y:0,tx:0,ty:0,lastX:0,lastY:0,speed:0};
 addEventListener('pointermove',(e)=>{
@@ -648,13 +656,13 @@ $('#orderButton').addEventListener('click',()=>{
 applyFlavor('pepperoni');
 
 const cameraStates={
-  hero:{p:[0,1.25,8.4],t:[.2,.65,0],f:40},
+  hero:{p:[0.15,1.35,9.45],t:[.55,.72,0],f:38},
   prep:{p:[0,6.1,1.35],t:[0,-.15,0],f:37},
   orbit:{p:[5.05,3.25,5.05],t:[0,-.05,0],f:41},
   oven:{p:[0,1.0,5.3],t:[0,.4,-2.1],f:46},
   product:{p:[4.45,3.05,5.2],t:[.45,-.05,0],f:39},
-  custom:{p:[.1,6.6,.65],t:[0,-.25,0],f:35},
-  final:{p:[-.3,7.4,1.85],t:[0,-.55,0],f:37}
+  custom:{p:[0.15,6.35,3.35],t:[0,-.62,0],f:31},
+  final:{p:[-.25,7.2,2.55],t:[0,-.82,0],f:34}
 };
 const camPos=new THREE.Vector3(),camTarget=new THREE.Vector3();
 function blendCamera(a,b,t){mixV3(a.p,b.p,t,camPos);mixV3(a.t,b.t,t,camTarget);camera.position.copy(camPos);camera.fov=lerp(a.f,b.f,t);camera.updateProjectionMatrix();camera.lookAt(camTarget);}
@@ -679,11 +687,11 @@ function setTransform(obj,pos,rot,scale){obj.position.set(...pos);obj.rotation.s
 function interpolateTransform(obj,a,b,t){obj.position.lerpVectors(new THREE.Vector3(...a.p),new THREE.Vector3(...b.p),t);obj.rotation.set(lerp(a.r[0],b.r[0],t),lerp(a.r[1],b.r[1],t),lerp(a.r[2],b.r[2],t));const s=lerp(a.s,b.s,t);obj.scale.setScalar(s);}
 
 const mascotStates={
-  off:{p:[3.1,-1.75,-1.7],r:[.05,-1.08,.03],s:.78},
-  glance:{p:[1.8,-1.7,.35],r:[.01,-.55,.02],s:1.0},
-  lean:{p:[.7,-1.23,.22],r:[-.1,.18,-.08],s:1.18},
-  present:{p:[1.25,-1.42,-.22],r:[.07,-.24,.09],s:1.07},
-  release:{p:[3.45,-2.15,-2.4],r:[.16,-1.3,.12],s:.63}
+  off:{p:[3.2,-1.72,-1.55],r:[.03,-.82,.02],s:.72},
+  glance:{p:[2.18,-1.69,.18],r:[.0,-.44,.015],s:.9},
+  lean:{p:[1.72,-1.47,.16],r:[-.055,-.1,-.035],s:.98},
+  present:{p:[1.92,-1.5,.03],r:[.02,-.28,.035],s:.96},
+  release:{p:[3.15,-1.95,-1.65],r:[.08,-.84,.06],s:.7}
 };
 function updateMascot(p){
   if(!mascot) return;
@@ -699,20 +707,22 @@ function updateMascot(p){
   mascotWrap.rotation.x+=-pointer.y*.075*pointerWeight;
   mascotWrap.position.x+=pointer.x*.18*pointerWeight;
   mascotWrap.position.y+=pointer.y*.06*pointerWeight;
-  if(p<.022) setAction('rig|idle_motion',.24,false);
-  else if(p<.05) setAction('rig|walk',.24,false);
-  else if(p<.086) setAction('rig|dash',.18,false);
-  else setAction('rig|slide',.16,false);
+  if(Object.keys(actions).length){
+    if(p<.022) setAction('rig|idle_motion',.24,false);
+    else if(p<.05) setAction('rig|walk',.24,false);
+    else if(p<.086) setAction('rig|dash',.18,false);
+    else setAction('rig|slide',.16,false);
+  }
 }
 
 const pizzaStates={
-  hand:{p:[1.15,.5,1.9],r:[-.88,.36,-.08],s:1.08},
-  prep:{p:[0,-.58,.15],r:[0,.16,0],s:1.36},
-  orbit:{p:[0,-.58,.1],r:[-.12,.55,.03],s:1.42},
-  oven:{p:[0,-.58,-3.45],r:[-.32,1.16,0],s:1.08},
-  beauty:{p:[.85,-.52,.25],r:[-.42,.83,.04],s:1.47},
-  custom:{p:[0,-.7,.05],r:[0,.02,0],s:1.28},
-  boxed:{p:[0,-1.28,-.04],r:[0,0,0],s:1.03}
+  hand:{p:[.78,.28,1.08],r:[-.74,.28,-.055],s:.74},
+  prep:{p:[0,-.62,.12],r:[0,.14,0],s:1.26},
+  orbit:{p:[0,-.62,.08],r:[-.1,.5,.02],s:1.32},
+  oven:{p:[0,-.62,-3.5],r:[-.3,1.12,0],s:1.0},
+  beauty:{p:[1.05,-.62,.18],r:[-.38,.8,.035],s:1.34},
+  custom:{p:[0,-.92,.15],r:[-.08,.03,0],s:1.72},
+  boxed:{p:[0,-1.34,-.06],r:[0,0,0],s:.98}
 };
 function updatePizza(p,time){
   let a=pizzaStates.hand,b=pizzaStates.prep,t=range(p,.055,.12);
@@ -741,7 +751,7 @@ function updateIngredients(p,time){
   const rain=range(p,.245,.38);
   const orbit=range(p,.38,.54);
   const custom=range(p,.82,.93);
-  detached.group.visible=(p>.22&&p<.58)||(p>.81&&p<.94);
+  detached.group.visible=(p>.22&&p<.58)||(p>.81&&p<.94&&ingredientKick>.035);
   if(!detached.group.visible) return;
   detached.group.position.set(0,-.15,.05);
   detached.pieces.forEach((m,i)=>{
@@ -758,9 +768,9 @@ function updateIngredients(p,time){
       angle+=orbit*Math.PI*2.5+time*.00016;
       y=.45+Math.sin(angle*2+data.phase)*.75*(1-orbit*.45);
     }else{
-      radius=lerp(1.45,2.2,custom);
+      radius=lerp(.85,1.35,custom);
       angle+=time*.00024+i*.03;
-      y=lerp(.5,2.4,custom)+Math.sin(data.phase+time*.0012)*.18;
+      y=lerp(.45,1.55,custom)+Math.sin(data.phase+time*.0012)*.12;
     }
     const bias=(p>.25&&p<.38&&!coarsePointer)?pointer.x*.16:0;
     m.position.set(Math.cos(angle+bias)*radius,y-ingredientKick*.5,Math.sin(angle+bias)*radius);
@@ -770,7 +780,7 @@ function updateIngredients(p,time){
 }
 
 function updatePortals(p,time){
-  const t=Math.max(range(p,.34,.45)*(1-range(p,.52,.6)),range(p,.68,.74)*(1-range(p,.8,.86))*.7);
+  const t=range(p,.34,.45)*(1-range(p,.52,.6));
   rgbShift.uniforms.amount.value = reducedMotion ? 0 : t * 0.00075;
   rgbShift.uniforms.angle.value = time * 0.00009;
   portals.group.visible=t>.002;
