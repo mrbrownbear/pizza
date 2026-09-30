@@ -1,13 +1,12 @@
 {
-  "name": "pizza-bros-surreal-cinematic",
+  "name": "pizza-bros-serious-cinematic",
   "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0",
-    "prebuild": "node scripts/fetch-mascot.mjs"
+    "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "three": "0.180.0"

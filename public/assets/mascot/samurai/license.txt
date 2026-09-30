@@ -1,0 +1,11 @@
+Model Information:
+* title:	Samurai Pizza Cat (animated)
+* source:	https://sketchfab.com/3d-models/samurai-pizza-cat-animated-606eadb6a3db490588d6a413a1aea05a
+* author:	Jungle Jim (https://sketchfab.com/jungle_jim)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Samurai Pizza Cat (animated)" (https://sketchfab.com/3d-models/samurai-pizza-cat-animated-606eadb6a3db490588d6a413a1aea05a) by Jungle Jim (https://sketchfab.com/jungle_jim) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

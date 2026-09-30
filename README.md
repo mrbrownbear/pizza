@@ -1,35 +1,25 @@
-# Pizza Bros Surreal Cinematic Site
+# Pizza Bros — Serious Cinematic Edition
 
-Premium Three.js rebuild of Pizza Bros.
+A dark, editorial Three.js experience built around one connected product journey: Samurai Pizza Cat → pizza handoff → sauce → toppings → oven → signatures → customizer → box.
 
-## What changed
-
-* Replaced the procedural mascot with the supplied Peppina Ramen Pizza Tower animated GLTF model.
-* Uses four supplied animation clips: idle motion, walk, dash and slide.
-* Added cursor responsive mascot motion and head tracking in the hero.
-* Rebuilt the pizza with high segment geometry, procedural dough, sauce, cheese, pepperoni, paper and brick textures, plus physical materials.
-* Added a persistent pizza story through sauce, ingredient storm, oven tunnel, flavor selection, custom toppings and final boxing.
-* Added ACES tone mapping, environment reflections, atmospheric particles, surreal portal rings and bloom.
-* Added the supplied Italian pizza soundtrack. Browsers that block autoplay start it on the first user interaction. A sound control remains visible in the header.
-* Added accessible flavor, topping, quantity, menu and sound controls.
-* Added mobile composition and reduced motion behavior.
-
-## Run locally
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Production
+Production:
 
 ```bash
 npm run build
-npm run preview
 ```
 
-The project is Vite and Vercel compatible.
+## Local assets
 
-## Mascot license
+Runtime assets are local. The site does not fetch the mascot, audio, or food imagery from the live web.
 
-This work uses "Peppina Ramen Pizza Tower (Low poly)" by ggoljunsa under CC BY 4.0. The complete source credit and license text are included at `public/assets/mascot/LICENSE-MODEL.txt` and a compact credit is shown in the website footer.
+## Mascot credit
+
+This work uses **Samurai Pizza Cat (animated)** by Jungle Jim, licensed under **CC BY 4.0**.
+Source and full attribution are retained in `public/assets/mascot/samurai/license.txt`.
