@@ -1,9 +1,17 @@
 {
-  "name": "pizza-bros-cinematic",
+  "name": "pizza-bros-surreal-cinematic",
   "private": true,
-  "version": "1.0.0",
-  "description": "Self contained cinematic 3D Pizza Bros website with no runtime dependencies.",
+  "version": "2.0.0",
+  "type": "module",
   "scripts": {
-    "serve": "python -m http.server 5173"
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.7"
   }
 }
