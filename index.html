@@ -69,7 +69,17 @@
           <h2>THE BASE<br><em>BEFORE THE FIRE.</em></h2>
           <p class="lede">The pizza leaves the Bro and becomes the only object that matters. Everything else now happens to this exact pie.</p>
         </div>
-        <figure class="food-reference food-reference-right" aria-hidden="true"><img src="/assets/food/pizza-close.webp" alt="" /></figure>
+        <div class="process-diagram dough-diagram" aria-hidden="true">
+          <svg viewBox="0 0 600 600" role="presentation">
+            <circle class="ring ring-outer" cx="300" cy="300" r="238"/>
+            <circle class="ring ring-mid" cx="300" cy="300" r="176"/>
+            <circle class="ring ring-inner" cx="300" cy="300" r="112"/>
+            <path class="axis" d="M62 300H538M300 62V538"/>
+            <path class="tick" d="M300 35v30M300 535v30M35 300h30M535 300h30"/>
+            <text x="300" y="292" text-anchor="middle">01 / BASE</text>
+            <text x="300" y="322" text-anchor="middle" class="diagram-sub">HAND STRETCHED · 72H FERMENT</text>
+          </svg>
+        </div>
       </section>
 
       <section class="chapter process process-sauce" id="sauce" data-chapter="2">
@@ -89,7 +99,18 @@
           <h2>EVERY TOPPING<br><em>HAS A PLACE.</em></h2>
           <p class="lede">Ingredients orbit once, then commit. The motion is cinematic, but the result always returns to the pizza.</p>
         </div>
-        <figure class="food-reference ingredient-reference" aria-hidden="true"><img src="/assets/food/ingredient-storm.webp" alt="" /></figure>
+        <div class="process-diagram ingredient-diagram" aria-hidden="true">
+          <svg viewBox="0 0 760 520" role="presentation">
+            <ellipse class="orbit orbit-a" cx="380" cy="260" rx="280" ry="110"/>
+            <ellipse class="orbit orbit-b" cx="380" cy="260" rx="210" ry="178" transform="rotate(-24 380 260)"/>
+            <circle class="ingredient-node node-a" cx="125" cy="250" r="18"/>
+            <circle class="ingredient-node node-b" cx="548" cy="112" r="13"/>
+            <circle class="ingredient-node node-c" cx="625" cy="306" r="16"/>
+            <path class="ingredient-glyph pepper" d="M373 214c28-34 74-5 54 31-18 31-55 44-82 13-22-25 1-54 28-44Z"/>
+            <path class="ingredient-glyph basil" d="M375 276c-38 2-67 34-67 69 37 1 67-29 67-69Zm12 0c38 2 67 34 67 69-37 1-67-29-67-69Z"/>
+            <text x="380" y="430" text-anchor="middle">ORBIT / COMMIT / BAKE</text>
+          </svg>
+        </div>
       </section>
 
       <section class="chapter oven-stage" id="oven" data-chapter="4">
@@ -112,10 +133,22 @@
             <div class="product-meta"><span><small>CRUST</small><b>Stone blistered</b></span><span><small>FINISH</small><b id="flavorFinish">Tomato + chilli oil</b></span></div>
           </div>
           <div class="flavor-rail" role="group" aria-label="Pizza flavours">
-            <button class="flavor-button active" data-flavor="pepperoni" aria-pressed="true"><img src="/assets/food/flavor-1.webp" alt="Classic Pepperoni"><span><b>01</b><strong>CLASSIC PEPPERONI</strong></span></button>
-            <button class="flavor-button" data-flavor="bbq" aria-pressed="false"><img src="/assets/food/flavor-2.webp" alt="Smoky BBQ Chicken"><span><b>02</b><strong>SMOKY BBQ CHICKEN</strong></span></button>
-            <button class="flavor-button" data-flavor="garden" aria-pressed="false"><img src="/assets/food/flavor-3.webp" alt="Garden Heat"><span><b>03</b><strong>GARDEN HEAT</strong></span></button>
-            <button class="flavor-button" data-flavor="cheese" aria-pressed="false"><img src="/assets/food/flavor-4.webp" alt="Four Cheese"><span><b>04</b><strong>FOUR CHEESE</strong></span></button>
+            <button class="flavor-button active" data-flavor="pepperoni" aria-pressed="true">
+              <svg class="flavor-mark" viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="56"/><circle cx="59" cy="61" r="9"/><circle cx="99" cy="52" r="8"/><circle cx="105" cy="97" r="10"/><circle cx="61" cy="106" r="8"/></svg>
+              <span><b>01</b><strong>CLASSIC PEPPERONI</strong><small>TOMATO · PEPPERONI · CHILLI OIL</small></span>
+            </button>
+            <button class="flavor-button" data-flavor="bbq" aria-pressed="false">
+              <svg class="flavor-mark" viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="56"/><path d="M45 105c26-42 60-53 82-49M43 80c33-23 64-24 84-15M58 118c17-22 43-35 65-35"/></svg>
+              <span><b>02</b><strong>SMOKY BBQ CHICKEN</strong><small>SMOKE · CHAR · SWEET HEAT</small></span>
+            </button>
+            <button class="flavor-button" data-flavor="garden" aria-pressed="false">
+              <svg class="flavor-mark" viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="56"/><path d="M80 39c-30 8-45 31-37 55 28-3 43-19 37-55Zm1 36c30 8 45 31 37 55-28-3-43-19-37-55Z"/></svg>
+              <span><b>03</b><strong>GARDEN HEAT</strong><small>PEPPER · BASIL · OLIVE</small></span>
+            </button>
+            <button class="flavor-button" data-flavor="cheese" aria-pressed="false">
+              <svg class="flavor-mark" viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="56"/><path d="M48 58 80 42l32 16-13 46-19 14-19-14Zm0 0 32 18 32-18M80 76v42"/></svg>
+              <span><b>04</b><strong>FOUR CHEESE</strong><small>MOZZARELLA · PARMESAN · FONTINA</small></span>
+            </button>
           </div>
         </div>
       </section>

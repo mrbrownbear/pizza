@@ -17,7 +17,7 @@ npm run build
 
 ## Local assets
 
-Runtime assets are local. The site does not fetch the mascot, audio, or food imagery from the live web.
+Runtime assets are local. The site does not fetch the mascot or audio from the live web. Food presentation is carried by the 3D scene and vector UI, not raster section imagery.
 
 ## Mascot credit
 

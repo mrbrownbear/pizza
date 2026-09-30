@@ -449,7 +449,7 @@ function createBox(){
   const lipMat=mat.paper.clone();lipMat.color.setHex(0xb47f47);
   [[0,-.48,-2.48,5.15,.55,.22],[0,-.48,2.48,5.15,.55,.22],[-2.48,-.48,0,.22,.55,5.15],[2.48,-.48,0,.22,.55,5.15]].forEach(([x,y,z,sx,sy,sz])=>{const b=mesh(new THREE.BoxGeometry(sx,sy,sz),lipMat,g);b.position.set(x,y,z);});
   const lid=mesh(new THREE.BoxGeometry(5.15,.18,5.15),mat.paper,g);lid.position.set(0,1.6,-2.3);lid.rotation.x=-1.05;
-  const logoTex=canvasTexture((ctx,s)=>{ctx.clearRect(0,0,s,s);ctx.translate(s/2,s/2);ctx.rotate(-.08);ctx.textAlign='center';ctx.fillStyle='#78180f';ctx.font='900 110px Georgia';ctx.fillText('PIZZA',0,-18);ctx.font='900 142px Impact';ctx.fillText('BROS',0,112);ctx.strokeStyle='rgba(120,24,15,.6)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,30,200,0,Math.PI*2);ctx.stroke();});
+  const logoTex=canvasTexture((ctx,s)=>{ctx.clearRect(0,0,s,s);ctx.translate(s/2,s/2);ctx.rotate(-.08);ctx.textAlign='center';ctx.fillStyle='#78180f';ctx.font='600 104px Georgia';ctx.fillText('PIZZA',0,-18);ctx.font='600 132px Georgia';ctx.fillText('BROS',0,112);ctx.strokeStyle='rgba(120,24,15,.6)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(0,30,200,0,Math.PI*2);ctx.stroke();});
   const logo=mesh(new THREE.PlaneGeometry(3.3,3.3),new THREE.MeshBasicMaterial({map:logoTex,transparent:true,depthWrite:false}),g);logo.position.set(0,1.71,-2.3);logo.rotation.x=-1.05;logo.rotation.z=.02;
   g.userData={lid,logo};return g;
 }
@@ -478,77 +478,56 @@ loadingManager.onError=(url)=>{console.warn('Asset load failed',url);};
 const gltfLoader=new GLTFLoader(loadingManager);
 
 async function loadMascot(){
-  const binaryChunks=[0,1,2,3,4,5,6,7,8,9,10].map(i=>`/assets/mascot/samurai/bin/scene.${String(i).padStart(2,'0')}.bin`);
-  const textureGroups=[
-    {image:0,mime:'image/png',parts:6,stem:'Material_002_baseColor'},
-    {image:1,mime:'image/png',parts:3,stem:'Material_002_normal'},
-    {image:2,mime:'image/png',parts:3,stem:'Material_baseColor'},
-    {image:3,mime:'image/png',parts:4,stem:'Material_normal'}
-  ];
   try{
     loadCopy.textContent='LOADING THE BRO 8%';
-    const gltfRes=await fetch('/assets/mascot/samurai/scene.gltf');
-    if(!gltfRes.ok) throw new Error('Samurai GLTF could not be read');
-    const json=await gltfRes.json();
-    const blobUrls=[];
-    const joinLocalParts=async(urls,mime)=>{
-      const responses=await Promise.all(urls.map(url=>fetch(url)));
-      if(responses.some(r=>!r.ok)) throw new Error('A local Samurai asset chunk is missing');
-      const arrays=[];
-      for(const response of responses) arrays.push(new Uint8Array(await response.arrayBuffer()));
-      const url=URL.createObjectURL(new Blob(arrays,{type:mime}));
-      blobUrls.push(url);
-      return url;
-    };
-    const binUrl=await joinLocalParts(binaryChunks,'application/octet-stream');
-    json.buffers[0].uri=binUrl;
-    let completed=1,total=1+textureGroups.length;
-    for(const group of textureGroups){
-      const urls=Array.from({length:group.parts},(_,i)=>`/assets/mascot/samurai/texchunks/${group.stem}.${String(i).padStart(2,'0')}.bin`);
-      json.images[group.image].uri=await joinLocalParts(urls,group.mime);
-      completed+=1;
-      const pct=12+Math.round((completed/total)*78);
-      loadFill.style.transform=`scaleX(${pct/100})`; loadCopy.textContent=`LOADING THE BRO ${pct}%`;
-    }
-    gltfLoader.parse(JSON.stringify(json),'',(gltf)=>{
-      blobUrls.forEach(url=>URL.revokeObjectURL(url));
-      mascot=gltf.scene;
-      mascotWrap.clear();
-      mascotWrap.add(mascot);
-      const box3=new THREE.Box3().setFromObject(mascot);
-      const size=box3.getSize(new THREE.Vector3());
-      const scale=5.15/Math.max(size.y,.001);
-      mascot.scale.setScalar(scale);
-      box3.setFromObject(mascot);
-      const center=box3.getCenter(new THREE.Vector3());
-      mascot.position.x-=center.x; mascot.position.z-=center.z; mascot.position.y-=box3.min.y;
-      mascot.traverse((obj)=>{
-        if(!obj.isMesh) return;
-        obj.frustumCulled=false; obj.castShadow=true; obj.receiveShadow=true;
-        const mats=Array.isArray(obj.material)?obj.material:[obj.material];
-        mats.forEach((m)=>{
-          if(!m) return;
-          if(m.map){m.map.colorSpace=THREE.SRGBColorSpace;m.map.anisotropy=maxAniso;}
-          if(m.normalMap)m.normalMap.anisotropy=maxAniso;
-          if('roughness' in m)m.roughness=Math.max(.46,m.roughness ?? .58);
-          if('metalness' in m)m.metalness=Math.min(.08,m.metalness ?? 0);
-          if('envMapIntensity' in m)m.envMapIntensity=1.05;
-          m.needsUpdate=true;
-        });
+    const gltf=await gltfLoader.loadAsync('/assets/mascot/samurai/scene.gltf');
+    mascot=gltf.scene;
+    mascotWrap.clear();
+    mascotWrap.add(mascot);
+
+    let box3=new THREE.Box3().setFromObject(mascot);
+    const size=box3.getSize(new THREE.Vector3());
+    const scale=5.15/Math.max(size.y,.001);
+    mascot.scale.setScalar(scale);
+    box3=new THREE.Box3().setFromObject(mascot);
+    const center=box3.getCenter(new THREE.Vector3());
+    mascot.position.x-=center.x;
+    mascot.position.z-=center.z;
+    mascot.position.y-=box3.min.y;
+
+    mascot.traverse((obj)=>{
+      if(!obj.isMesh) return;
+      obj.frustumCulled=false;
+      obj.castShadow=true;
+      obj.receiveShadow=true;
+      const mats=Array.isArray(obj.material)?obj.material:[obj.material];
+      mats.forEach((m)=>{
+        if(!m) return;
+        if(m.map){m.map.colorSpace=THREE.SRGBColorSpace;m.map.anisotropy=maxAniso;}
+        if(m.normalMap)m.normalMap.anisotropy=maxAniso;
+        if('roughness' in m)m.roughness=Math.max(.46,m.roughness ?? .58);
+        if('metalness' in m)m.metalness=Math.min(.08,m.metalness ?? 0);
+        if('envMapIntensity' in m)m.envMapIntensity=1.05;
+        m.needsUpdate=true;
       });
-      mixer=new THREE.AnimationMixer(mascot);
-      if(gltf.animations[0]){
-        mascotClipDuration=gltf.animations[0].duration;
-        mascotAction=mixer.clipAction(gltf.animations[0]);
-        mascotAction.setLoop(THREE.LoopRepeat,Infinity); mascotAction.timeScale=.42; mascotAction.play();
-      }
-      headNode=mascot.getObjectByName('CC_Base_Head_041');
-      leftEyeNode=mascot.getObjectByName('CC_Base_L_Eye_049');
-      rightEyeNode=mascot.getObjectByName('CC_Base_R_Eye_048');
-      loadFill.style.transform='scaleX(1)'; loadCopy.textContent='READY';
-      loaderEl.classList.add('is-ready');
-      setTimeout(()=>loaderEl.classList.add('is-done'),520);
-    },(error)=>{blobUrls.forEach(url=>URL.revokeObjectURL(url));throw error;});
+    });
+
+    mixer=new THREE.AnimationMixer(mascot);
+    if(gltf.animations[0]){
+      mascotClipDuration=gltf.animations[0].duration;
+      mascotAction=mixer.clipAction(gltf.animations[0]);
+      mascotAction.setLoop(THREE.LoopRepeat,Infinity);
+      mascotAction.timeScale=.42;
+      mascotAction.play();
+    }
+    headNode=mascot.getObjectByName('CC_Base_Head_041');
+    leftEyeNode=mascot.getObjectByName('CC_Base_L_Eye_049');
+    rightEyeNode=mascot.getObjectByName('CC_Base_R_Eye_048');
+
+    loadFill.style.transform='scaleX(1)';
+    loadCopy.textContent='READY';
+    loaderEl.classList.add('is-ready');
+    setTimeout(()=>loaderEl.classList.add('is-done'),520);
   }catch(error){
     console.error('Samurai mascot failed to load',error);
     loadCopy.textContent='MASCOT COULD NOT LOAD';
